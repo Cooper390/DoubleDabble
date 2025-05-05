@@ -131,7 +131,6 @@ doubleDabble:
     clr   BCD4
     clr   BCD23
     clr   BCD01
-
     ; load & pre-align 10-bit ADC into r24:r25
     mov   r24, bin1
     mov   r25, bin0
@@ -141,10 +140,8 @@ doubleDabble:
     rol   r24
     dec   r17
     brne  .align_input
-
     ldi   r17, 10    ; # of bits to process
 .loop:
-    ; —— add-3 per digit ——
     cpi   BCD4, 5
     brlo  .skip4
     subi  BCD4, -3
@@ -175,22 +172,18 @@ doubleDabble:
     brlo  .no_add1
     subi  BCD01, -3
 .no_add1:
-
-    ; —— shift BCD chain ——
     lsl   BCD4
     rol   BCD23
     rol   BCD01
-
-    ; —— shift binary & insert ——
     lsl   r25
     rol   r24
     brcc  .no_insert
     ori   BCD01, 0x01
 .no_insert:
-
     dec   r17
     brne  .loop
     ret
+
 display:
   ldi   offset,'0'
   mov   r24,BCD4
